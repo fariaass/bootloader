@@ -1,11 +1,27 @@
 # Bootloader
 
-## Install GCC Cross Compiler
+## Install Dependencies
+First of all, run `sudo apt update`.
+
+### Install NASM
 ```base
-sudo apt update && sudo apt install build-essential bison flex git libgmp3-dev libmpc-dev libmpfr-dev texinfo libisl-dev -y
+sudo apt install nasm -y
+```
+
+### Install QEMU
+```base
+sudo apt install qemu-system -y
+```
+
+### Install GCC Cross Compiler
+```base
+sudo apt install build-essential bison flex git libgmp3-dev libmpc-dev libmpfr-dev texinfo libisl-dev -y
 
 git clone git://sourceware.org/git/binutils-gdb.git
 git clone https://gcc.gnu.org/git/gcc.git
+export PREFIX="$HOME/opt/cross"
+export TARGET=i686-elf
+export PATH="$PREFIX/bin:$PATH"
 mkdir src
 mv binutils-gdb gcc src
 cd src
@@ -13,25 +29,29 @@ mkdir build-binutils
 cd build-binutils
 
 ../binutils-gdb/configure --target=$TARGET --prefix="$PREFIX" --with-sysroot --disable-nls --disable-werror
-make
-make install
+sudo make
+sudo make install
 
 which -- $TARGET-as || echo $TARGET-as is not in the PATH
+cd ../gcc
+./contrib/download_prerequisites
+
+cd ..
 mkdir build-gcc
 cd build-gcc
 
 ../gcc/configure --target=$TARGET --prefix="$PREFIX" --disable-nls --enable-languages=c,c++ --without-headers --disable-hosted-libstdcxx
-make all-gcc
-make all-target-libgcc
-make all-target-libstdc++-v3
-make install-gcc
-make install-target-libgcc
-make install-target-libstdc++-v3
+sudo make all-gcc
+sudo make all-target-libgcc
+sudo make all-target-libstdc++-v3
+sudo make install-gcc
+sudo make install-target-libgcc
+sudo make install-target-libstdc++-v3
 
 $HOME/opt/cross/bin/$TARGET-gcc --version
 export PATH="$HOME/opt/cross/bin:$PATH"
 
-cd ../../..
+cd ../..
 ```
 
 ## Format the disk
