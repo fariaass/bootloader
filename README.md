@@ -1,6 +1,6 @@
 # Bootloader
 
-## Install the GCC Cross Compiler
+## Install GCC Cross Compiler
 ```base
 sudo apt update && sudo apt install build-essential bison flex git libgmp3-dev libmpc-dev libmpfr-dev texinfo libisl-dev -y
 
@@ -30,9 +30,14 @@ make install-target-libstdc++-v3
 
 $HOME/opt/cross/bin/$TARGET-gcc --version
 export PATH="$HOME/opt/cross/bin:$PATH"
+
+cd ../../..
 ```
 
 ## Format the disk
+PLEASE TAKE CARE WHEN SELECTING THE DISK YOU WANT TO FORMAT, THIS ACTION CAN SEVERELY DAMAGE YOUR COMPUTER!!!
+
+In the command below, the selected disk is at `/dev/sda`.
 ```bash
 sudo fdisk /dev/sda <<EOF
 o
