@@ -1,5 +1,37 @@
 # Bootloader
 
+## Install the GCC Cross Compiler
+```base
+sudo apt install build-essential bison flex libgmp3-dev libmpc-dev libmpfr-dev texinfo libisl-dev
+
+git clone git://sourceware.org/git/binutils-gdb.git
+git clone https://gcc.gnu.org/git/gcc.git
+mkdir src
+mv binutils-gdb gcc src
+cd src
+mkdir build-binutils
+cd build-binutils
+
+../binutils-gdb/configure --target=$TARGET --prefix="$PREFIX" --with-sysroot --disable-nls --disable-werror
+make
+make install
+
+which -- $TARGET-as || echo $TARGET-as is not in the PATH
+mkdir build-gcc
+cd build-gcc
+
+../gcc/configure --target=$TARGET --prefix="$PREFIX" --disable-nls --enable-languages=c,c++ --without-headers --disable-hosted-libstdcxx
+make all-gcc
+make all-target-libgcc
+make all-target-libstdc++-v3
+make install-gcc
+make install-target-libgcc
+make install-target-libstdc++-v3
+
+$HOME/opt/cross/bin/$TARGET-gcc --version
+export PATH="$HOME/opt/cross/bin:$PATH"
+```
+
 ## Format the disk
 ```bash
 sudo fdisk /dev/sda <<EOF
