@@ -1,0 +1,8 @@
+src/
+boot.bin
+vbr.bin
+entry.o
+kernel.o
+kernel2.o
+myos.elf
+myos2.elf
