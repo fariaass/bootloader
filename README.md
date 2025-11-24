@@ -2,7 +2,7 @@
 
 ## Install the GCC Cross Compiler
 ```base
-sudo apt update && sudo apt install build-essential bison flex libgmp3-dev libmpc-dev libmpfr-dev texinfo libisl-dev -y
+sudo apt update && sudo apt install build-essential bison flex git libgmp3-dev libmpc-dev libmpfr-dev texinfo libisl-dev -y
 
 git clone git://sourceware.org/git/binutils-gdb.git
 git clone https://gcc.gnu.org/git/gcc.git
