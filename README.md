@@ -1,7 +1,8 @@
 # Bootloader
 
 ## Format the disk
-`sudo fdisk /dev/sda <<EOF
+```bash
+sudo fdisk /dev/sda <<EOF
 o
 n
 p
@@ -22,31 +23,43 @@ t
 a
 2
 w
-EOF`
+EOF
+```
 
 ## Assemble and write the MBR
-`nasm -f bin boot.asm -o boot.bin
+```bash
+nasm -f bin boot.asm -o boot.bin
 sudo dd if=boot.bin of=/dev/sda conv=notrunc bs=446 count=1
-sudo dd if=boot.bin of=/dev/sda conv=notrunc bs=1 count=2 skip=510 seek=510`
+sudo dd if=boot.bin of=/dev/sda conv=notrunc bs=1 count=2 skip=510 seek=510
+```
 
 ## Assemble and write the VBR for both partitions
-`nasm -f bin vbr.asm -o vbr.bin
+```bash
+nasm -f bin vbr.asm -o vbr.bin
 sudo dd if=vbr.bin of=/dev/sda1 conv=notrunc bs=512 count=1
-sudo dd if=vbr.bin of=/dev/sda2 conv=notrunc bs=512 count=1`
+sudo dd if=vbr.bin of=/dev/sda2 conv=notrunc bs=512 count=1
+```
 
 ## Assemble the entrypoint for kernels
-`i686-elf-as entry.s -o entry.o`
+```bash
+i686-elf-as entry.s -o entry.o
+```
 
 ## Compile, link and write kernel 1
-`i686-elf-gcc -c kernel.c -o kernel.o -std=gnu99 -ffreestanding -fno-builtin -O2 -Wall -Wextra
+```bash
+i686-elf-gcc -c kernel.c -o kernel.o -std=gnu99 -ffreestanding -fno-builtin -O2 -Wall -Wextra
 i686-elf-gcc -T linker.ld -o myos.elf -ffreestanding -O2 -nostdlib entry.o kernel.o
-sudo dd if=myos.elf of=/dev/sda1 conv=notrunc bs=512 count=40 seek=1`
+sudo dd if=myos.elf of=/dev/sda1 conv=notrunc bs=512 count=40 seek=1
+```
 
 ## Compile, link and write kernel 2
-`i686-elf-gcc -c kernel2.c -o kernel2.o -std=gnu99 -ffreestanding -fno-builtin -O2 -Wall -Wextra
+```bash
+i686-elf-gcc -c kernel2.c -o kernel2.o -std=gnu99 -ffreestanding -fno-builtin -O2 -Wall -Wextra
 i686-elf-gcc -T linker.ld -o myos2.elf -ffreestanding -O2 -nostdlib entry.o kernel2.o
-sudo dd if=myos2.elf of=/dev/sda2 conv=notrunc bs=512 count=40 seek=1`
+sudo dd if=myos2.elf of=/dev/sda2 conv=notrunc bs=512 count=40 seek=1
+```
 
 ## Boot
-`sudo qemu-system-i386 -hda /dev/sda -no-reboot -no-shutdown`
-
+```bash
+sudo qemu-system-i386 -hda /dev/sda -no-reboot -no-shutdown
+```
